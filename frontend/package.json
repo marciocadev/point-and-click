@@ -1,0 +1,43 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.jsx",
+  "scripts": {
+    "start": "react-scripts start && ngrok http 5173",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.92.4",
+    "@react-three/fiber": "^8.15.12",
+    "@react-three/postprocessing": "^2.15.11",
+    "@react-three/rapier": "^1.2.1",
+    "ecctrl": "^1.0.50",
+    "jotai": "^2.6.0",
+    "react": "^18.2.0",
+    "react-device-detect": "^2.2.3",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^5.0.1",
+    "react-use-websocket": "^4.5.0",
+    "three": "^0.159.0",
+    "three-stdlib": "^2.28.7",
+    "zustand": "^4.4.7"
+  }
+}
