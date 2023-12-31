@@ -1,10 +1,6 @@
 bring ex;
+bring math;
 bring websockets;
-
-class Util {
-  extern "./util.js" pub static inflight _generateRandomHexcolor(): str;
-  extern "./util.js" pub static inflight _generateRandomPosition(): Array<num>;
-}
 
 class Game {
   userdb: ex.DynamodbTable;
@@ -12,34 +8,36 @@ class Game {
   app: ex.ReactApp;
 
   new() {
-    this.userdb = new ex.DynamodbTable(
-      name: "users",
-      hashKey: "userid",
-      attributeDefinitions: { userid: "S"}
-    ) as "userdb";
+    if !std.Node.of(this).app.isTestEnvironment {
+      this.userdb = new ex.DynamodbTable(
+        name: "users",
+        hashKey: "userid",
+        attributeDefinitions: { userid: "S"}
+      ) as "userdb";
 
-    this.ws = new websockets.WebSocket(
-      name: "Game",
-    ) as "socket";
-    
-    this.app = new ex.ReactApp(
-      projectPath: "../frontend",
-    ) as "app";
-
-    this.ws.onConnect(inflight (id: str) => { this.onConnect(id); });
-    this.ws.onDisconnect(inflight (id: str) => { this.onDisconnect(id); });
-    this.ws.onMessage(inflight (id: str, msg: str) => { this.onMessage(id, msg); });
-    this.ws.initialize();
-
-    this.app.addEnvironment("wsUrl", this.ws.url());
+      this.ws = new websockets.WebSocket(
+        name: "Game",
+      ) as "socket";
+      
+      this.app = new ex.ReactApp(
+        projectPath: "../frontend",
+      ) as "app";
+  
+      this.ws.onConnect(inflight (id: str) => { this.onConnect(id); });
+      this.ws.onDisconnect(inflight (id: str) => { this.onDisconnect(id); });
+      this.ws.onMessage(inflight (id: str, msg: str) => { this.onMessage(id, msg); });
+      this.ws.initialize();
+  
+      this.app.addEnvironment("wsUrl", this.ws.url());
+    }
   }
 
   pub inflight onConnect(id: str) {
     this.userdb.putItem(
       item: {
         userid: id,
-        position: Util._generateRandomPosition(),
-        color: Util._generateRandomHexcolor()
+        position: [math.random()*3, 0, math.random()*3],
+        color: "#{math.toRadix(math.floor(math.random() * 16777215), 16)}",
       }
     );
     log("{id} connected");
