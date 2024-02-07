@@ -28,7 +28,7 @@ class Game {
       this.ws.onMessage(inflight (id: str, msg: str) => { this.onMessage(id, msg); });
       this.ws.initialize();
   
-      this.app.addEnvironment("wsUrl", this.ws.url());
+      this.app.addEnvironment("wsUrl", this.ws.url);
     }
   }
 
@@ -41,12 +41,11 @@ class Game {
       }
     );
     log("{id} connected");
-    this.broadcast(id);
   }
   pub inflight onDisconnect(id: str) {
     this.userdb.deleteItem(key: { userid: id });
     log("{id} disconnected");
-    this.broadcast(id);
+    this.broadcast();
   }
   pub inflight onMessage(id: str, message: str) {
     if let event = Json.tryParse(message) {
@@ -58,12 +57,16 @@ class Game {
           expressionAttributeValues: { ":position": data },
           expressionAttributeNames: { "#position": "position" }
         );
-        this.broadcast(id);
+        this.broadcast();
+      }
+
+      if event.get("type") == "broadcast" {
+        this.broadcast();
       }
     }
   }
 
-  inflight broadcast(id: str) {
+  inflight broadcast() {
     let users = this.userdb.scan();
     for item in users.items {
       let userid = item.get("userid").asStr();

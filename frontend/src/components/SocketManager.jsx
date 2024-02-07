@@ -11,8 +11,17 @@ export const SocketManager = ({ children }) => {
   const [_characters, setCharacters] = useAtom(charactersAtom)
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(URL, {
-    onOpen: () => { console.log('connected') },
-    onClose: () => { console.log('disconnected') },
+    onOpen: () => {
+      console.log('connected')
+      sendMessage(
+        JSON.stringify({
+          type: "broadcast"
+        })
+      )
+    },
+    onClose: () => {
+      console.log('disconnected')
+    },
     onMessage: (event) => {
       let obj = JSON.parse(event.data)
       if (obj["type"] === "characters") {
