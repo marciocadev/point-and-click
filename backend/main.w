@@ -26,7 +26,6 @@ class Game {
       this.ws.onConnect(inflight (id: str) => { this.onConnect(id); });
       this.ws.onDisconnect(inflight (id: str) => { this.onDisconnect(id); });
       this.ws.onMessage(inflight (id: str, msg: str) => { this.onMessage(id, msg); });
-      this.ws.initialize();
   
       this.app.addEnvironment("wsUrl", this.ws.url);
     }
